@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Reto CSS: descubre tu calificación</title>
+  <title>¿Cuanto Sacaste?</title>
+  <link rel="stylesheet" href="https://use.typekit.net/ujd7zbd.css">
   <style>
     @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&family=Roboto+Condensed:wght@400;700;900&display=swap");
 
@@ -183,8 +184,10 @@
       text-shadow: 5px 5px 0 #fff62e, 9px 9px 0 #160a36;
     }
 
-    .celebracion p { margin: 18px 0 0; font-family: Arial, sans-serif; font-size: 1.2rem; font-weight: bold; }
-    .numero { margin: 4px 0 !important; color: #8b2cff; font-size: clamp(8rem, 37vw, 15rem); font-weight: bold; line-height: 1; text-shadow: 5px 5px 0 #00d5ff, 10px 10px 0 #160a36; }
+    .celebracion p { margin: 18px 0 0; font-family:  "cc-zzzap", sans-serif;
+font-weight: 400;
+font-style: normal; }
+    .numero { margin: 4px 0 !important; color: #8b2cff; font-size: 70vmin;  line-height: 1; text-shadow: 5px 5px 0 #00d5ff, 10px 10px 0 #160a36; }
 
     .confeti {
       position: fixed;
@@ -276,7 +279,6 @@
       padding: 38px 20px;
       background: #a978ee;
       color: #f5edff;
-      font-family: "Roboto", Arial, sans-serif;
       animation: none;
     }
 
@@ -363,7 +365,7 @@
       letter-spacing: -.07em;
       text-shadow: none;
       transform: none;
-      animation: cambiarDegradado 7s linear infinite;
+      animation: cambiarDegradado 7s, pulso 2s ease-in-out infinite;
     }
 
    h1.activado {
@@ -375,6 +377,19 @@
   animation:
     cambiarDegradado 7s linear infinite alternate,
     sombraSeDisipa 5s ease-out infinite alternate;
+
+}
+
+ @keyframes pulso {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgb(141, 205, 248);
+  }
+
+  50% {
+    transform: scale(1.1);
+    box-shadow: 0 0 0 10px rgba(116, 245, 223, 0);
+  }
 }
 
 @keyframes sombraSeDisipa {
@@ -454,31 +469,16 @@
       background: #1b1b1c;
       animation: none;
     }
+   
 
-    #resultado::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      opacity: .8;
-      background: repeating-radial-gradient(ellipse at 50% 50%, transparent 0 0px, #ff9bd2 31px 34px, transparent 35px 68px);
-      animation: ondasFondo 1s ease-in-out infinite alternate;
-    }
-
-    
-
-    .celebracion h2 {
-      margin: 0;
-      color: #ffafd9;
-      font-family: "Roboto", Arial, sans-serif;
-      font-size: clamp(.85rem, 2.2vw, 1.15rem);
-      font-weight: 700;
-      letter-spacing: .32em;
-      line-height: 1.1;
-      text-shadow: none;
-    }
-
-    .celebracion p { color: rgba(255, 255, 255, .72); font-family: "Roboto", Arial, sans-serif; font-size: 25rem; font-weight:bolder; }
-    .numero { color: #fff; background: linear-gradient(90deg, #ff9aca, #b693ff 38%, #74f5df 62%, #ff9aca); background-size: 220% 100%; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; font-family: "Roboto Condensed", Arial, sans-serif; font-size: clamp(11rem, 45vw, 23rem); font-weight: 900; letter-spacing: -.1em; line-height: .78; text-shadow: none; animation: cambiarDegradado 5s linear infinite; }
+    .celebracion p { color: rgba(255, 255, 255, .72); 
+font-weight: 400; font-style: normal;
+font-style: normal; font-size: 70vmin;  }
+    .numero { color: #fff; background: linear-gradient(90deg, #ff9aca, #b693ff 38%, #74f5df 62%, #ff9aca); background-size: 220% 100%; -webkit-background-clip: text; background-clip: text; 
+      -webkit-text-fill-color: transparent; font-family: "cc-zzzap-open", "roboto", sans-serif;
+font-weight: 400;
+font-style: normal; font-size: 70vmin; font-weight: 400;  text-shadow: none; 
+      animation: cambiarDegradado 5s linear infinite; }
 
     .confeti {
       top: -40px;
@@ -492,24 +492,25 @@
     }
 
     #errorModal { background: rgba(17, 14, 26, .88); }
-    .ventana-video { border: 1px solid #e9a7d3; border-radius: 25px; background: #1b1b1c; box-shadow: 0 0 45px rgba(174, 135, 255, .45); transform: none; }
+    .ventana-video { border: opx solid #e9a7d3; border-radius: 25px; background: #1b1b1c; box-shadow: 0 0 45px rgba(174, 135, 255, .45); transform: none; }
     .ventana-video h2 { color: #fff; font-family: "Roboto Condensed", Arial, sans-serif; font-size: clamp(1.35rem, 4vw, 2.3rem); line-height: 1; text-shadow: none; }
     .ventana-video iframe { border: 1px solid rgba(119, 242, 222, .75); border-radius: 13px; }
     .cerrar { border: 0; border-radius: 50%; background: #ffaad6; box-shadow: none; color: #1b1b1c; }
+    
 
-    @keyframes ondasFondo { to { transform: scale(6) translateY(-20px); opacity: .45; } }
+    @keyframes ondasFondo { to { transform: scale(16) translateY(-20px); opacity: .45; } }
     @keyframes pulsoSuave { to { opacity: .55; letter-spacing: .42em; } }
 
     @media (max-width: 500px) {
       .tarjeta { padding: 42px 23px 38px; }
       .celebracion h2 { letter-spacing: .2em; }
-      .numero { font-size: clamp(9rem, 52vw, 15rem); }
+      .numero { font-size: 25vmax }
     }
   </style>
 </head>
 <body>
   <main class="tarjeta">
-    <p class="etiqueta">aquí dice algo</p>
+    <p class="etiqueta"><span style="font-weight: bolder;">↓↓↓↓↓</span>aquí dice algo <span>↓↓↓↓↓</span></p>
     <h1 id="titulo">Descubre tu calificación</h1>
 
     <p id="pregunta"></p>
