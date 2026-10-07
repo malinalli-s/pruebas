@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reto CSS: descubre tu calificación</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      background-color: #15112f;
+      background-image: repeating-linear-gradient(
+        135deg,
+        #15112f 0,
+        #15112f 18px,
+        #30255f 18px,
+        #30255f 36px
+      );
+      color: #f7f5ff;
+      font-family: Arial, sans-serif;
+    }
+
+    .tarjeta {
+      width: min(100%, 580px);
+      padding: 36px;
+      text-align: center;
+      border: 1px solid rgba(255, 255, 255, .25);
+      border-radius: 24px;
+      background: rgba(15, 16, 43, .72);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, .35);
+    }
+
+    .etiqueta {
+      display: inline-block;
+      margin: 0 0 12px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: #f8ca4d;
+      color: #1b1739;
+      font-size: .8rem;
+      font-weight: bold;
+      letter-spacing: .08em;
+    }
+
+    h1 { margin: 0 0 12px; font-size: clamp(1.7rem, 5vw, 2.3rem); }
+    .instruccion { color: #d8d4ef; line-height: 1.5; }
+    #pregunta { min-height: 78px; margin: 28px 0 18px; font-size: 1.25rem; line-height: 1.45; }
+
+    input {
+      width: 100%;
+      padding: 15px;
+      border: 2px solid transparent;
+      border-radius: 12px;
+      outline: none;
+      font-size: 1rem;
+      text-align: center;
+    }
+
+    input:focus { border-color: #f8ca4d; }
+
+    button {
+      margin-top: 14px;
+      padding: 14px 22px;
+      border: 0;
+      border-radius: 12px;
+      background: #f8ca4d;
+      color: #201a42;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform .2s, background-color .2s;
+    }
+
+    button:hover { transform: translateY(-3px); background-color: #ffe18c; }
+    #mensaje { min-height: 24px; margin: 16px 0 0; color: #ffc3c3; }
+
+    #resultado, #errorModal {
+      display: none;
+    }
+
+    #resultado {
+      position: fixed;
+      inset: 0;
+      z-index: 10;
+      place-items: center;
+      overflow: hidden;
+      padding: 24px;
+      background: linear-gradient(135deg, #7d32b8, #ee6f6f, #f8ca4d);
+      color: #211936;
+    }
+
+    .celebracion {
+      position: relative;
+      z-index: 1;
+      width: min(100%, 680px);
+      padding: 42px 24px;
+      text-align: center;
+      border-radius: 30px;
+      background: rgba(255, 255, 255, .82);
+      box-shadow: 0 24px 70px rgba(47, 13, 72, .36);
+    }
+
+    .celebracion h2 {
+      margin: 0;
+      font-size: clamp(2.2rem, 10vw, 5rem);
+      line-height: .95;
+    }
+
+    .celebracion p { margin: 18px 0 0; font-size: 1.2rem; }
+    .numero { margin: 4px 0 !important; font-size: clamp(7rem, 34vw, 13rem); font-weight: bold; line-height: 1; }
+
+    .confeti {
+      position: fixed;
+      top: -30px;
+      width: 14px;
+      height: 24px;
+      border-radius: 4px;
+      animation: caer 3.8s linear forwards;
+    }
+
+    @keyframes caer {
+      to { transform: translate(var(--movimiento), 110vh) rotate(720deg); }
+    }
+
+    #errorModal {
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      place-items: center;
+      padding: 20px;
+      background: rgba(9, 6, 24, .82);
+    }
+
+    .ventana-video {
+      position: relative;
+      width: min(100%, 720px);
+      padding: 22px;
+      border: 3px solid #f8ca4d;
+      border-radius: 20px;
+      background: #211936;
+      box-shadow: 0 20px 70px #000;
+    }
+
+    .ventana-video h2 { margin: 0 34px 16px 0; font-size: 1.35rem; }
+    .ventana-video iframe { display: block; width: 100%; aspect-ratio: 16 / 9; border: 0; border-radius: 10px; }
+
+    .cerrar {
+      position: absolute;
+      top: 12px;
+      right: 14px;
+      margin: 0;
+      padding: 5px 11px;
+      border-radius: 8px;
+      background: #f8ca4d;
+      color: #211936;
+      font-size: 1.2rem;
+    }
+
+    .cerrar:hover { transform: none; }
+
+    .oculto { display: none; }
+
+    /* Estilos de la versión anterior conservados para la calificación. */
+    .resultado-anterior {
+      margin-top: 25px;
+      padding: 22px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #f8ca4d, #f18f55);
+      color: #211936;
+    }
+
+    .resultado-anterior p { margin: 0; }
+  </style>
+</head>
+<body>
+  <main class="tarjeta">
+    <p class="etiqueta">RETO DE CSS</p>
+    <h1>Descubre tu calificación</h1>
+    <p class="instruccion">Contesta correctamente la pregunta que apareció al azar para abrir tu resultado.</p>
+
+    <p id="pregunta"></p>
+    <input id="respuesta" type="text" autocomplete="off" placeholder="Escribe tu respuesta aquí">
+    <br>
+    <button id="boton" type="button">Abrir resultado</button>
+    <p id="mensaje" aria-live="polite"></p>
+
+    <section id="resultado" aria-live="polite">
+      <div class="celebracion">
+        <h2>¡Felicidades! 🎉</h2>
+        <p>Tu calificación es:</p>
+        <p id="numero" class="numero"></p>
+        <p>¡Terminaste el reto de CSS!</p>
+      </div>
+    </section>
+
+    <section id="errorModal" aria-label="Respuesta incorrecta">
+      <div class="ventana-video">
+        <button id="cerrarVideo" class="cerrar" type="button" aria-label="Cerrar video">×</button>
+        <h2>Ups… todavía no. Mira esto y vuelve a intentarlo:</h2>
+        <iframe
+          id="videoError"
+          width="560"
+          height="315"
+          src="https://www.youtube.com/embed/hvL1339luv0?si=Xk9W3ll-X_Jk8C6m"
+          title="YouTube video player"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          referrerpolicy="strict-origin-when-cross-origin"
+          allowfullscreen
+        ></iframe>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // CAMBIA ESTE NÚMERO PARA CADA ESTUDIANTE ANTES DE ENVIAR SU ARCHIVO.
+    const calificacion = 8.5;
+
+    const preguntas = [
+      { texto: "¿Qué propiedad hace que un cambio de CSS ocurra suavemente durante un tiempo?", respuestas: ["transition"] },
+      { texto: "¿Qué propiedad permite mover, rotar, aumentar o reducir el tamaño de un elemento?", respuestas: ["transform"] },
+      { texto: "¿Qué valor de position mantiene un elemento fijo en la pantalla aunque hagas scroll?", respuestas: ["fixed"] },
+      { texto: "¿Qué propiedad controla qué elemento aparece encima de otro?", respuestas: ["z-index", "z index"] },
+      { texto: "¿Qué selector crea un elemento visual después del contenido sin agregarlo al HTML?", respuestas: ["::after", ":after"] },
+      { texto: "¿Qué propiedad se usa para iniciar una animación creada con @keyframes?", respuestas: ["animation"] },
+      { texto: "¿Qué propiedad cambia el color de fondo de un elemento?", respuestas: ["background-color", "background color"] },
+      { texto: "¿Qué propiedad redondea las esquinas de una caja?", respuestas: ["border-radius", "border radius"] },
+      { texto: "¿Qué propiedad cambia el tamaño de un texto?", respuestas: ["font-size", "font size"] },
+      { texto: "¿Qué valor de position coloca un elemento según el flujo normal de la página?", respuestas: ["static"] },
+      { texto: "¿Qué valor de position permite mover un elemento desde su lugar original usando top, right, bottom o left?", respuestas: ["relative"] },
+      { texto: "¿Qué valor de position permite colocar un elemento respecto a su contenedor con position: relative?", respuestas: ["absolute"] },
+      { texto: "¿Qué propiedad indica cuánto tarda una transición?", respuestas: ["transition-duration", "transition duration"] }
+    ];
+
+    const preguntaActual = preguntas[Math.floor(Math.random() * preguntas.length)];
+    const pregunta = document.getElementById("pregunta");
+    const respuesta = document.getElementById("respuesta");
+    const mensaje = document.getElementById("mensaje");
+    const resultado = document.getElementById("resultado");
+    const errorModal = document.getElementById("errorModal");
+
+    pregunta.textContent = preguntaActual.texto;
+
+    function normalizar(texto) {
+      return texto.toLowerCase().trim().replace(/\s+/g, " ");
+    }
+
+    function revisarRespuesta() {
+      const esCorrecta = preguntaActual.respuestas.includes(normalizar(respuesta.value));
+
+      if (esCorrecta) {
+        document.getElementById("numero").textContent = calificacion;
+        resultado.style.display = "grid";
+        mensaje.textContent = "¡Correcto!";
+        mensaje.style.color = "#bfffd3";
+        respuesta.disabled = true;
+        document.getElementById("boton").disabled = true;
+        lanzarConfeti();
+      } else {
+        mensaje.textContent = "Aún no. Lee con cuidado y vuelve a intentarlo.";
+        mensaje.style.color = "#ffc3c3";
+        errorModal.style.display = "grid";
+      }
+    }
+
+    function lanzarConfeti() {
+      const colores = ["#f8ca4d", "#ef6e6e", "#ffffff", "#57d7c3", "#7946d8"];
+
+      for (let i = 0; i < 130; i++) {
+        const pieza = document.createElement("span");
+        pieza.className = "confeti";
+        pieza.style.left = Math.random() * 100 + "vw";
+        pieza.style.backgroundColor = colores[Math.floor(Math.random() * colores.length)];
+        pieza.style.setProperty("--movimiento", (Math.random() * 280 - 140) + "px");
+        pieza.style.animationDelay = Math.random() * .7 + "s";
+        pieza.style.transform = "rotate(" + Math.random() * 360 + "deg)";
+        resultado.appendChild(pieza);
+        pieza.addEventListener("animationend", () => pieza.remove());
+      }
+    }
+
+    function cerrarVideo() {
+      errorModal.style.display = "none";
+      respuesta.focus();
+    }
+
+    document.getElementById("boton").addEventListener("click", revisarRespuesta);
+    document.getElementById("cerrarVideo").addEventListener("click", cerrarVideo);
+    respuesta.addEventListener("keydown", (evento) => {
+      if (evento.key === "Enter") revisarRespuesta();
+    });
+  </script>
+</body>
+</html>
